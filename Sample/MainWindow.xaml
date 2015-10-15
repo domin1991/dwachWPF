@@ -1,0 +1,13 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dwach="clr-namespace:DwachWPF.Controls;assembly=Controls"
+        xmlns:local="clr-namespace:DwachWPF.Sample" 
+        x:Class="DwachWPF.Sample.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <local:Model/>
+    </Window.DataContext>
+    <Grid>
+    </Grid>
+</Window>
