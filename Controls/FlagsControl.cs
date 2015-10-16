@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,8 +14,7 @@ namespace DwachWPF.Controls
             get { return GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(object), typeof(FlagsControl), new PropertyMetadata(propertyChangedCallback: SourceChange));
 
@@ -27,16 +27,30 @@ namespace DwachWPF.Controls
 
         private void ReloadLabels(object value)
         {
-
             var names = Enum.GetNames(value.GetType());
             var selected = value.ToString();
 
             _stackPanel.Children.Clear();
             foreach (var name in names)
             {
-                var isChecked = selected.Contains(name);
-                _stackPanel.Children.Add(new CheckBox() { Content = name, IsChecked = isChecked});
+                var checkBox = new CheckBox() { Content = name };
+                checkBox.IsChecked = selected.Contains(name);
+                checkBox.Checked += CheckBoxChange;
+                checkBox.Unchecked += CheckBoxChange;
+
+                _stackPanel.Children.Add(checkBox);
             }
+        }
+
+        private void CheckBoxChange(object sender, RoutedEventArgs e)
+        {
+            var selectedFlags =_stackPanel.Children
+                .OfType<CheckBox>()
+                .Where(x => x.IsChecked == true)
+                .Select(x => x.Content);
+            var stringEnum = String.Join(", ", selectedFlags);
+            var obj = Enum.Parse(Source.GetType(), stringEnum);
+            Source = obj;
         }
 
         public FlagsControl()
