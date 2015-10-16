@@ -12,6 +12,7 @@ namespace DwachWPF.Sample
     {
         private FirstEnum _flags;
         private SecondEnum _personProperty;
+        private Level _level = Level.Normal;
 
         public FirstEnum Flags
         {
@@ -35,6 +36,20 @@ namespace DwachWPF.Sample
             set
             {
                 _personProperty = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Level Level
+        {
+            get
+            {
+                return _level;
+            }
+
+            set
+            {
+                _level = value;
                 NotifyPropertyChanged();
             }
         }

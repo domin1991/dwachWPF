@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace DwachWPF.Controls
 {
@@ -14,7 +15,7 @@ namespace DwachWPF.Controls
             get { return GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
-        
+
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(object), typeof(FlagsControl), new PropertyMetadata(propertyChangedCallback: SourceChange));
 
@@ -27,25 +28,40 @@ namespace DwachWPF.Controls
 
         private void ReloadLabels(object value)
         {
+            var isFlag = value.GetType().GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+
             var names = Enum.GetNames(value.GetType());
             var selected = value.ToString();
 
             _stackPanel.Children.Clear();
+
             foreach (var name in names)
             {
-                var checkBox = new CheckBox() { Content = name };
-                checkBox.IsChecked = selected.Contains(name);
-                checkBox.Checked += CheckBoxChange;
-                checkBox.Unchecked += CheckBoxChange;
+                ToggleButton checkBox;
+                if (isFlag)
+                {
+                    checkBox = new CheckBox();
+                }
+                else
+                {
+                    checkBox = new RadioButton();
+                }
 
+                checkBox.Content = name;
+                checkBox.Click += CheckBoxChange;
                 _stackPanel.Children.Add(checkBox);
             }
+
+            _stackPanel.Children
+                .OfType<ToggleButton>()
+                .Where(x => selected.Contains((string)x.Content)).ToList().ForEach(x => x.IsChecked = true);
+
         }
 
         private void CheckBoxChange(object sender, RoutedEventArgs e)
         {
-            var selectedFlags =_stackPanel.Children
-                .OfType<CheckBox>()
+            var selectedFlags = _stackPanel.Children
+                .OfType<ToggleButton>()
                 .Where(x => x.IsChecked == true)
                 .Select(x => x.Content);
             var stringEnum = string.Join(", ", selectedFlags);
@@ -56,7 +72,7 @@ namespace DwachWPF.Controls
             else
             {
                 Source = Enum.Parse(Source.GetType(), stringEnum);
-            }            
+            }
         }
 
         public FlagsControl()

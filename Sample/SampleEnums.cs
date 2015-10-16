@@ -16,9 +16,17 @@ namespace DwachWPF.Sample
     [Flags]
     public enum SecondEnum
     {
-        Happy,
-        Shy,
-        Tall,
-        Fat
+        Neutral = 0,
+        Happy = 1,
+        Shy = 2,
+        Tall = 4,
+        Fat = 8
+    }
+
+    public enum Level
+    {
+        Easy,
+        Normal,
+        Hard
     }
 }
