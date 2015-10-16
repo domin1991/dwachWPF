@@ -23,7 +23,7 @@
         
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="View">
-                
+                <MenuItem Header="Take ScreenShot" Command="{Binding TakeScreenShotCommand}"/>
             </MenuItem>
         </Menu>
         
@@ -35,6 +35,9 @@
 
         <dwach:FlagsControl Source="{Binding Level, Mode=TwoWay}" Margin="10,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"/>
         <dwach:FlagsControl Source="{Binding Level, Mode=TwoWay}" Margin="10,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"  Grid.Column="1" />
-        
+
+        <dwach:ScreenGrabber IsScreenshotMode="{Binding IsScreenshotMode, Mode=TwoWay}" 
+                             SavePngCommand="{Binding SaveScreenshotCommand}"
+                             MaskColor="Gray" MaskOpacity="0.7" Grid.ColumnSpan="2" Grid.RowSpan="4" />
     </Grid>
 </Window>

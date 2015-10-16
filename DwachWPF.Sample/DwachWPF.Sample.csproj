@@ -53,6 +53,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActionCommand.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="SampleEnums.cs" />
     <Page Include="MainWindow.xaml">
@@ -96,7 +97,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Controls\DwachWPF.Controls.csproj">
+    <ProjectReference Include="..\DwachWPF.Controls\DwachWPF.Controls.csproj">
       <Project>{2900b50f-3714-43ac-aaaa-3bbe36348874}</Project>
       <Name>DwachWPF.Controls</Name>
     </ProjectReference>
