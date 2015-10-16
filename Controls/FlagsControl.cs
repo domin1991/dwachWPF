@@ -21,17 +21,21 @@ namespace DwachWPF.Controls
         private static void SourceChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var flagsControl = d as FlagsControl;
-            var names = Enum.GetNames(e.NewValue.GetType());
 
-            flagsControl.ReloadLabels(names);
+            flagsControl.ReloadLabels(e.NewValue);
         }
 
-        private void ReloadLabels(string[] names)
+        private void ReloadLabels(object value)
         {
+
+            var names = Enum.GetNames(value.GetType());
+            var selected = value.ToString();
+
             _stackPanel.Children.Clear();
             foreach (var name in names)
             {
-                _stackPanel.Children.Add(new CheckBox() { Content = name });
+                var isChecked = selected.Contains(name);
+                _stackPanel.Children.Add(new CheckBox() { Content = name, IsChecked = isChecked});
             }
         }
 

@@ -8,6 +8,13 @@
     <Window.DataContext>
         <local:Model/>
     </Window.DataContext>
-    <Grid>
+    <Grid x:Name="grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <dwach:FlagsControl Source="{Binding Flags}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Line Grid.Column="1" Y2="{Binding ActualHeight, ElementName=grid, Mode=OneWay}" StrokeThickness="1" Stroke="Black"/>
+        <dwach:FlagsControl Source="{Binding Flags}" Grid.Column="1"  Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" />
     </Grid>
 </Window>

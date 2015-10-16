@@ -5,12 +5,12 @@ namespace DwachWPF.Sample
     [Flags]
     public enum FirstEnum
     {
-        FirstFlag,
-        SecondFlag,
-        ThirdFlag,
-        FourthFlag,
-        FifthFlag,
-        SixthFlag,
+        FirstFlag = 1,
+        SecondFlag = 2,
+        ThirdFlag = 4,
+        FourthFlag = 8,
+        FifthFlag = 16,
+        SixthFlag = 32,
     }
 
     [Flags]

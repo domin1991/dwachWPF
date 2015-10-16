@@ -10,5 +10,10 @@ namespace DwachWPF.Sample
     {
         public FirstEnum Flags { get; set; }
         public SecondEnum PersonProperty { get; set; }
+
+        public Model()
+        {
+            Flags = (FirstEnum.SecondFlag | FirstEnum.FifthFlag);
+        }
     }
 }
