@@ -48,9 +48,15 @@ namespace DwachWPF.Controls
                 .OfType<CheckBox>()
                 .Where(x => x.IsChecked == true)
                 .Select(x => x.Content);
-            var stringEnum = String.Join(", ", selectedFlags);
-            var obj = Enum.Parse(Source.GetType(), stringEnum);
-            Source = obj;
+            var stringEnum = string.Join(", ", selectedFlags);
+            if (string.IsNullOrWhiteSpace(stringEnum))
+            {
+                Source = Activator.CreateInstance(Source.GetType());
+            }
+            else
+            {
+                Source = Enum.Parse(Source.GetType(), stringEnum);
+            }            
         }
 
         public FlagsControl()
