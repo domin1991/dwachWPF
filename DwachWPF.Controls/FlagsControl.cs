@@ -19,6 +19,23 @@ namespace DwachWPF.Controls
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(object), typeof(FlagsControl), new PropertyMetadata(propertyChangedCallback: SourceChange));
 
+
+
+        public Orientation Orientation
+        {
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+        
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(FlagsControl), new PropertyMetadata(Orientation.Vertical, propertyChangedCallback: OrientationChange));
+
+        private static void OrientationChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var flagsControl = d as FlagsControl;
+            flagsControl._stackPanel.Orientation = (Orientation)e.NewValue;
+        }
+
         private static void SourceChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var flagsControl = d as FlagsControl;
