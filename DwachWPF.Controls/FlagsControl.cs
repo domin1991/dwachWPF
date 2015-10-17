@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,33 +48,54 @@ namespace DwachWPF.Controls
         private void ReloadLabels(object value)
         {
             var isFlag = value.GetType().GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+            var namesAndDescriptions = GetNamesAndDescriptions(value);
 
-            var names = Enum.GetNames(value.GetType());
-            var selected = value.ToString();
+            AddControls(isFlag, namesAndDescriptions);
 
+            CheckSelected(value);
+
+        }
+
+        private void AddControls(bool isFlag, List<KeyValuePair<string, string>> namesAndDescriptions)
+        {
             _stackPanel.Children.Clear();
 
-            foreach (var name in names)
+            foreach (var nameAndDesctiption in namesAndDescriptions)
             {
-                ToggleButton checkBox;
+                ToggleButton toggleButton;
                 if (isFlag)
                 {
-                    checkBox = new CheckBox();
+                    toggleButton = new CheckBox();
                 }
                 else
                 {
-                    checkBox = new RadioButton();
+                    toggleButton = new RadioButton();
                 }
 
-                checkBox.Content = name;
-                checkBox.Click += CheckBoxChange;
-                _stackPanel.Children.Add(checkBox);
+                toggleButton.Name = nameAndDesctiption.Key;
+                toggleButton.Content = nameAndDesctiption.Value;
+                toggleButton.Click += CheckBoxChange;
+                _stackPanel.Children.Add(toggleButton);
             }
+        }
 
+        private void CheckSelected(object value)
+        {
+            var selected = value.ToString();
             _stackPanel.Children
                 .OfType<ToggleButton>()
-                .Where(x => selected.Contains((string)x.Content)).ToList().ForEach(x => x.IsChecked = true);
+                .Where(x => selected.Contains((string)x.Name)).ToList().ForEach(x => x.IsChecked = true);
+        }
 
+        private static List<KeyValuePair<string,string>> GetNamesAndDescriptions(object value)
+        {
+            return value.GetType().GetFields().Skip(1)
+                            .Select(x =>
+                            {
+                                var descAttrib = x.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault();
+                                string description = descAttrib == null ? x.Name : ((DescriptionAttribute)descAttrib).Description;
+                                return new KeyValuePair<string, string>(x.Name, description);
+                            }).ToList();
         }
 
         private void CheckBoxChange(object sender, RoutedEventArgs e)
@@ -80,8 +103,10 @@ namespace DwachWPF.Controls
             var selectedFlags = _stackPanel.Children
                 .OfType<ToggleButton>()
                 .Where(x => x.IsChecked == true)
-                .Select(x => x.Content);
+                .Select(x => x.Name);
+
             var stringEnum = string.Join(", ", selectedFlags);
+
             if (string.IsNullOrWhiteSpace(stringEnum))
             {
                 Source = Activator.CreateInstance(Source.GetType());

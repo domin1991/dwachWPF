@@ -1,15 +1,22 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DwachWPF.Sample
 {
     [Flags]
     public enum FirstEnum
     {
+        [Description("First flag")]
         FirstFlag = 1,
+        [Description("Second flag")]
         SecondFlag = 2,
+        [Description("Third flag")]
         ThirdFlag = 4,
+        [Description("Fourth flag")]
         FourthFlag = 8,
+        [Description("Fifth flag")]
         FifthFlag = 16,
+        [Description("Sixth flag")]
         SixthFlag = 32,
     }
 
