@@ -79,12 +79,62 @@ namespace DwachWPF.Sample
             }
         }
 
+        private IEnumerable<List<double>> _sampleData;
+        public IEnumerable<List<double>> SampleData
+        {
+            get
+            {
+                return _sampleData;
+            }
+            set
+            {
+                if (_sampleData != value)
+                {
+                    _sampleData = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private IEnumerable<Func<double, double>> _sampleFunc;
+        public IEnumerable<Func<double, double>> SampleFunc
+        {
+            get
+            {
+                return _sampleFunc;
+            }
+            set
+            {
+                if (_sampleFunc != value)
+                {
+                    _sampleFunc = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public Model()
         {
             Flags = (FirstEnum.SecondFlag | FirstEnum.FifthFlag);
 
             TakeScreenShotCommand = new ActionCommand<object>(x => IsScreenshotMode = true);
             SaveScreenshotCommand = new ActionCommand<byte[]>(SaveScreenshot);
+            var data  = new List<List<double>>();
+            data.Add(GenerateValues());
+            SampleData = data;
+
+            SampleFunc = new List<Func<double, double>>() { x => 0.5 * x * x -9 };
+        }
+
+        private List<double> GenerateValues()
+        {
+            var result = new List<double>();
+            for (int i = -10; i < 20; i++)
+            {
+                result.Add(i);
+                result.Add(i);
+            }
+            return result;
         }
 
         private void SaveScreenshot(byte[] png)
@@ -94,7 +144,7 @@ namespace DwachWPF.Sample
             if (dialog.ShowDialog() == true)
             {
                 FileInfo fileInfo = new FileInfo(dialog.FileName);
-                if(fileInfo.Exists)
+                if (fileInfo.Exists)
                 {
                     fileInfo.Delete();
                 }

@@ -44,9 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FlagsControl.cs" />
+    <Compile Include="Plot.cs" />
+    <Compile Include="Plot.Properties.cs" >
+	  <DependentUpon>Plot.cs</DependentUpon>
+	</Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ruler.cs" />
-    <Compile Include="Ruler.Properties.cs" />
+    <Compile Include="Ruler.Properties.cs" >
+	  <DependentUpon>Ruler.cs</DependentUpon>
+	</Compile>
     <Compile Include="ScreenGrabber.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
