@@ -23,27 +23,39 @@ namespace DwachWPF.Controls
 
         private void DrawSource(DrawingContext drawingContext)
         {
-            if (Source == null || !Source.Any())
+            var enumerableSource = Source as IEnumerable<object>;
+            if (enumerableSource != null && enumerableSource.Any())
+            {
+                foreach (var obj in enumerableSource)
+                {
+                    DrawObject(drawingContext, obj);
+                }
+                return;
+            }
+
+            DrawObject(drawingContext, Source);
+        }
+
+        private void DrawObject(DrawingContext drawingContext, object obj)
+        {
+            var plotSource = obj as PlotSource;
+            if (plotSource != null)
             {
                 return;
             }
 
-            foreach (var item in Source)
+            var function = obj as Func<double, double>;
+            if (function != null)
             {
-                var values = item as IEnumerable<double>;
-                if (values != null)
-                {
-                    DrawValues(drawingContext, values);
-                }
-                else
-                {
-                    var function = item as Func<double, double>;
-                    if (function != null)
-                    {
-                        DrawFunction(drawingContext, function);
-                    }
-                }
+                DrawFunction(drawingContext, function);
+                return;
+            }
 
+            var enumerableDoubleSource = obj as IEnumerable<double>;
+            if (enumerableDoubleSource != null)
+            {
+                DrawValues(drawingContext, enumerableDoubleSource);
+                return;
             }
         }
 
@@ -63,7 +75,6 @@ namespace DwachWPF.Controls
                 }
             }
         }
-
 
         private void DrawFunction(DrawingContext drawingContext, Func<double, double> function)
         {

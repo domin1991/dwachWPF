@@ -14,9 +14,33 @@ namespace DwachWPF.Sample
     public class Model : INotifyPropertyChanged
     {
         private FirstEnum _flags;
-        private SecondEnum _personProperty;
-        private Level _level = Level.Normal;
         private bool _isScreenshotMode;
+        private Level _level = Level.Normal;
+        private SecondEnum _personProperty;
+        private List<double> _sampleData;
+        private IEnumerable<List<double>> _sampleDatas;
+        private Func<double, double> _sampleFunc;
+        private IEnumerable<Func<double, double>> _sampleFuncs;
+        private IEnumerable<object> _multiplePlotSource;
+
+        public Model()
+        {
+            Flags = (FirstEnum.SecondFlag | FirstEnum.FifthFlag);
+
+            TakeScreenShotCommand = new ActionCommand<object>(x => IsScreenshotMode = true);
+            SaveScreenshotCommand = new ActionCommand<byte[]>(SaveScreenshot);
+            var data = new List<List<double>>();
+            data.Add(GenerateValues());
+            SampleDatas = data;
+            SampleData = GenerateValues();
+
+            SampleFuncs = new List<Func<double, double>>() { x => 0.5 * x * x - 9 };
+            SampleFunc =  x => 0.5 * x * x - 9 ;
+
+            MultiplePlotSource = new List<object>() { SampleFunc, SampleData };
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public FirstEnum Flags
         {
@@ -30,20 +54,6 @@ namespace DwachWPF.Sample
                 NotifyPropertyChanged();
             }
         }
-
-        public SecondEnum PersonProperty
-        {
-            get
-            {
-                return _personProperty;
-            }
-            set
-            {
-                _personProperty = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public Level Level
         {
             get
@@ -57,10 +67,95 @@ namespace DwachWPF.Sample
                 NotifyPropertyChanged();
             }
         }
+        public SecondEnum PersonProperty
+        {
+            get
+            {
+                return _personProperty;
+            }
+            set
+            {
+                _personProperty = value;
+                NotifyPropertyChanged();
+            }
+        }
 
-        public ICommand TakeScreenShotCommand { get; set; }
+        public List<double> SampleData
+        {
+            get
+            {
+                return _sampleData;
+            }
+            set
+            {
+                if (_sampleData != value)
+                {
+                    _sampleData = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public IEnumerable<List<double>> SampleDatas
+        {
+            get
+            {
+                return _sampleDatas;
+            }
+            set
+            {
+                if (_sampleDatas != value)
+                {
+                    _sampleDatas = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public Func<double, double> SampleFunc
+        {
+            get
+            {
+                return _sampleFunc;
+            }
+            set
+            {
+                if (_sampleFunc != value)
+                {
+                    _sampleFunc = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public IEnumerable<Func<double, double>> SampleFuncs
+        {
+            get
+            {
+                return _sampleFuncs;
+            }
+            set
+            {
+                if (_sampleFuncs != value)
+                {
+                    _sampleFuncs = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public IEnumerable<object> MultiplePlotSource
+        {
+            get
+            {
+                return _multiplePlotSource;
+            }
 
-        public ICommand SaveScreenshotCommand { get; set; }
+            set
+            {
+                if (_multiplePlotSource != value)
+                {
+                    _multiplePlotSource = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public bool IsScreenshotMode
         {
@@ -78,53 +173,8 @@ namespace DwachWPF.Sample
                 }
             }
         }
-
-        private IEnumerable<List<double>> _sampleData;
-        public IEnumerable<List<double>> SampleData
-        {
-            get
-            {
-                return _sampleData;
-            }
-            set
-            {
-                if (_sampleData != value)
-                {
-                    _sampleData = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        private IEnumerable<Func<double, double>> _sampleFunc;
-        public IEnumerable<Func<double, double>> SampleFunc
-        {
-            get
-            {
-                return _sampleFunc;
-            }
-            set
-            {
-                if (_sampleFunc != value)
-                {
-                    _sampleFunc = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public Model()
-        {
-            Flags = (FirstEnum.SecondFlag | FirstEnum.FifthFlag);
-
-            TakeScreenShotCommand = new ActionCommand<object>(x => IsScreenshotMode = true);
-            SaveScreenshotCommand = new ActionCommand<byte[]>(SaveScreenshot);
-            var data  = new List<List<double>>();
-            data.Add(GenerateValues());
-            SampleData = data;
-
-            SampleFunc = new List<Func<double, double>>() { x => 0.5 * x * x -9 };
-        }
+        public ICommand SaveScreenshotCommand { get; set; }
+        public ICommand TakeScreenShotCommand { get; set; }
 
         private List<double> GenerateValues()
         {
@@ -137,6 +187,13 @@ namespace DwachWPF.Sample
             return result;
         }
 
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         private void SaveScreenshot(byte[] png)
         {
             var dialog = new SaveFileDialog();
@@ -154,15 +211,5 @@ namespace DwachWPF.Sample
                 }
             }
         }
-
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

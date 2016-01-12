@@ -50,7 +50,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Plot" >
-                <dwach:Plot Source="{Binding SampleFunc}"/>
+                <dwach:Plot Source="{Binding MultiplePlotSource}"/>
             </TabItem>
         </TabControl>
 

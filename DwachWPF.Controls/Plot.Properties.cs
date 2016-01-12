@@ -44,13 +44,13 @@ namespace DwachWPF.Controls
 
 
 
-        public IEnumerable<object> Source
+        public object Source
         {
-            get { return (IEnumerable<object>)GetValue(SourceProperty); }
+            get { return GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(IEnumerable<object>), typeof(Plot), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+            DependencyProperty.Register("Source", typeof(object), typeof(Plot), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
 
 
